@@ -1,5 +1,9 @@
 opencv-python
-numpy
+numpy<2.0
 keras-facenet
 tensorflow
-
+flask
+flask-socketio
+flask-cors
+python-socketio
+scipy

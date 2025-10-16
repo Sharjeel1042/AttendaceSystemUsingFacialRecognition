@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Attendance System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Face Recognition Attendance System</h1>
+            <div class="status" id="status">
+                <span class="dot"></span>
+                <span id="status-text">Disconnected</span>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('recognize')">Mark Attendance</button>
+            <button class="tab-button" onclick="showTab('register')">Register Student</button>
+            <button class="tab-button" onclick="showTab('records')">View Records</button>
+        </div>
+
+        <!-- Recognize Tab -->
+        <div id="recognize-tab" class="tab-content active">
+            <div class="video-container">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+            <div class="controls">
+                <button id="start-camera" class="btn btn-primary">Start Camera</button>
+                <button id="capture-recognize" class="btn btn-success" disabled>Capture & Recognize</button>
+                <button id="stop-camera" class="btn btn-danger" disabled>Stop Camera</button>
+            </div>
+            <div id="recognition-result" class="result-box"></div>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register-tab" class="tab-content">
+            <form id="registration-form">
+                <div class="form-group">
+                    <label>Registration Number:</label>
+                    <input type="text" id="reg-no" required>
+                </div>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Semester:</label>
+                    <input type="text" id="semester" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone:</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Capture Images (at least 5):</label>
+                    <div class="video-container">
+                        <video id="register-video" autoplay playsinline></video>
+                        <canvas id="register-canvas" style="display: none;"></canvas>
+                    </div>
+                    <div class="controls">
+                        <button type="button" id="start-register-camera" class="btn btn-primary">Start Camera</button>
+                        <button type="button" id="capture-image" class="btn btn-info" disabled>Capture Image (<span id="image-count">0</span>/10)</button>
+                        <button type="button" id="clear-images" class="btn btn-warning" disabled>Clear Images</button>
+                    </div>
+                    <div id="captured-images" class="image-preview"></div>
+                </div>
+                <button type="submit" id="submit-registration" class="btn btn-success" disabled>Register Student</button>
+            </form>
+            <div id="registration-result" class="result-box"></div>
+        </div>
+
+        <!-- Records Tab -->
+        <div id="records-tab" class="tab-content">
+            <div class="controls">
+                <button id="refresh-records" class="btn btn-primary">Refresh Records</button>
+            </div>
+            <div id="attendance-records" class="records-container">
+                <p>Loading records...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
