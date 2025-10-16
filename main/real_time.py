@@ -1,6 +1,6 @@
 import cv2
-from .recognition import recognize_person
-from .database_utils import mark_attendance
+from recognition import recognize_person
+from database_utils import mark_attendance
 
 
 def run_realtime_attendance(net, embedder, database, conn):

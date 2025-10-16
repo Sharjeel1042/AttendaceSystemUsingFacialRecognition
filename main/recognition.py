@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 from numpy.linalg import norm
-from .face_detection import detect_faces, extract_face
-from .face_embedding import get_embedding
+from faceDetection import detect_faces, extract_face
+from faceEmbedding import get_embedding
 
 
 def cosine_similarity(a, b):

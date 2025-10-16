@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import os
-from .face_detection import detect_faces, extract_face
-from .face_embedding import get_embedding
-from .database_utils import add_student
+from faceDetection import detect_faces, extract_face
+from faceEmbedding import get_embedding
+from database_utils import add_student
 
 
 def register_person(image_paths, net, embedder):

@@ -8,8 +8,8 @@ import cv2
 import os
 from keras_facenet import FaceNet
 from main.database_utils import init_database
-from main.register import load_dataset
-from main.realtime import run_realtime_attendance
+from registration import load_dataset
+from real_time import run_realtime_attendance
 
 # --- Path Configuration ---
 MODELS_PATH = "models/"
