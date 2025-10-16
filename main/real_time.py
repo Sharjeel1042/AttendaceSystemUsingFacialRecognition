@@ -13,6 +13,7 @@ def run_realtime_attendance(net, embedder, database, conn):
         return
 
     print("[INFO] Starting webcam... Press 'q' to quit.")
+    cv2.namedWindow("Attendance System")
     while True:
         ret, frame = cap.read()
         if not ret:

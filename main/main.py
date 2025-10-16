@@ -7,13 +7,18 @@
 import cv2
 import os
 from keras_facenet import FaceNet
-from main.database_utils import init_database
-from registration import load_dataset
+from database_utils import init_database
+from registration import load_dataset, register_new_student
 from real_time import run_realtime_attendance
 
+
 # --- Path Configuration ---
-MODELS_PATH = "models/"
-DATASET_PATH = "../dataset/"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 'main' folder
+PROJECT_ROOT = os.path.dirname(BASE_DIR)               # go up to project root
+MODELS_PATH = os.path.join(PROJECT_ROOT, "models")
+DATASET_PATH = os.path.join(PROJECT_ROOT, "dataset")
+
+
 
 
 def load_models():
@@ -48,16 +53,30 @@ def main():
         print("[INFO] Format: dataset/RegNo_Name_Semester_Phone/image.jpg")
         # You can still run the webcam to see unknown faces
 
-    # 4. Start the real-time attendance system
-    run_realtime_attendance(net, embedder, database, conn)
 
+    while True:
+        print("\n=== FACE RECOGNITION ATTENDANCE SYSTEM ===")
+        print("1. Register New Student")
+        print("2. Start Attendance System")
+        print("3. Exit")
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+
+            register_new_student(DATASET_PATH, net, embedder, conn, database)
+        elif choice == "2":
+            run_realtime_attendance(net, embedder, database, conn)
+        elif choice == "3":
+            break
+        else:
+            print("[ERROR] Invalid choice. Please try again.")
+
+        # 4. Start the real-time attendance system
+        run_realtime_attendance(net, embedder, database, conn)
     # 5. Close database connection
     conn.close()
     print("[INFO] Application finished.")
 
 
 if __name__ == "__main__":
-    # Change directory to the 'main' folder to handle relative paths correctly
-    if os.path.basename(os.getcwd()) != "main":
-        os.chdir('main')
     main()
