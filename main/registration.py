@@ -44,8 +44,9 @@ def register_new_student(dataset_path, net, embedder, conn, database):
     print("\n=== REGISTER NEW STUDENT ===")
 
     # Get student details
-    reg_no = input("Enter Registration Number: ").strip()
+
     name = input("Enter Name: ").strip()
+    reg_no = input("Enter Registration Number: ").strip()
     semester = input("Enter Semester: ").strip()
     phone = input("Enter Phone Number: ").strip()
 
