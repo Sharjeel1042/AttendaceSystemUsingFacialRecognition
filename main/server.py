@@ -13,6 +13,7 @@ from faceDetection import detect_faces, extract_face
 from faceEmbedding import get_embedding
 from database_utils import init_database, mark_attendance, add_student
 from registration import load_dataset
+import sqlite3
 
 app = Flask(__name__, template_folder='../client/templates', static_folder='../client/static')
 CORS(app)
@@ -30,12 +31,16 @@ net = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
 from keras_facenet import FaceNet
 embedder = FaceNet()
 
-# Initialize database
-conn = init_database()
+# Initialize database (for dataset loading only)
+def get_db_connection():
+    return sqlite3.connect(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database', 'attendance.db'), check_same_thread=False)
+
+conn_for_dataset = get_db_connection()
 
 # Load dataset
 DATASET_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "dataset")
-database = load_dataset(DATASET_PATH, net, embedder, conn)
+database = load_dataset(DATASET_PATH, net, embedder, conn_for_dataset)
+conn_for_dataset.close()
 print(f"[INFO] Models loaded successfully! Database has {len(database)} registered faces.")
 
 
@@ -112,13 +117,17 @@ def handle_recognize(data):
             # Threshold for recognition (0.6 works well for FaceNet)
             if min_distance < 0.6:
                 # Get student info from database
+                conn = get_db_connection()
                 cursor = conn.cursor()
                 cursor.execute("SELECT reg_no, name, semester, phone FROM students WHERE reg_no = ?", (best_match,))
                 student_info = cursor.fetchone()
+                conn.close()
 
                 if student_info:
                     # Mark attendance
+                    conn = get_db_connection()
                     mark_attendance(conn, best_match)
+                    conn.close()
 
                     recognized_students.append({
                         'reg_no': student_info[0],
@@ -215,7 +224,9 @@ def handle_register(data):
         avg_embedding = np.mean(embeddings, axis=0)
 
         # Save to database
+        conn = get_db_connection()
         add_student(conn, reg_no, name, semester, phone)
+        conn.close()
 
         # Update in-memory database
         database[reg_no] = avg_embedding
@@ -252,15 +263,17 @@ def handle_register(data):
 def handle_get_attendance(data):
     """Get attendance records"""
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT a.reg_no, s.name, a.timestamp 
+            SELECT a.student_reg_no, s.name, a.timestamp 
             FROM attendance a 
-            JOIN students s ON a.reg_no = s.reg_no 
+            JOIN students s ON a.student_reg_no = s.reg_no 
             ORDER BY a.timestamp DESC 
             LIMIT 100
         """)
         records = cursor.fetchall()
+        conn.close()
 
         attendance_list = [
             {
