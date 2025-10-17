@@ -119,7 +119,7 @@ def handle_recognize(data):
                 # Get student info from database
                 conn = get_db_connection()
                 cursor = conn.cursor()
-                cursor.execute("SELECT reg_no, name, semester, phone FROM students WHERE reg_no = ?", (best_match,))
+                cursor.execute("SELECT reg_no, name, semester, phone_number FROM students WHERE reg_no = ?", (best_match,))
                 student_info = cursor.fetchone()
                 conn.close()
 
@@ -133,6 +133,7 @@ def handle_recognize(data):
                         'reg_no': student_info[0],
                         'name': student_info[1],
                         'semester': student_info[2],
+                        # map phone_number column to 'phone' key expected by client
                         'phone': student_info[3],
                         'confidence': float(1 - min_distance),
                         'distance': float(min_distance)
