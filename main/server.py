@@ -279,6 +279,6 @@ def handle_get_attendance(data):
 
 
 if __name__ == '__main__':
-    print("[INFO] Starting server on http://0.0.0.0:5000")
-    print("[INFO] Access from your phone using: http://YOUR_PC_IP:5000")
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True, use_reloader=False, allow_unsafe_werkzeug=True)
+    print("[INFO] Starting server on https://0.0.0.0:5000")
+    print("[INFO] Access from your phone using: https://YOUR_PC_IP:5000")
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True, use_reloader=False, allow_unsafe_werkzeug=True, ssl_context='adhoc')
