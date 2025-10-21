@@ -60,7 +60,7 @@ def register_new_student(dataset_path, net, embedder, conn, database):
         return
 
     # Create directory for the student
-    person_dir = f"{reg_no}_{name}_{semester}_{phone}"
+    person_dir = f"{reg_no}/{name}/{semester}/{phone}"
     person_path = os.path.join(dataset_path, person_dir)
 
     if not os.path.exists(person_path):

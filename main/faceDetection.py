@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def detect_faces(frame, net, confidence_threshold=0.5):
     """
     Detects faces in an image frame using a pre-trained Caffe model.
@@ -26,6 +27,8 @@ def detect_faces(frame, net, confidence_threshold=0.5):
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             boxes.append(box.astype("int"))
     return boxes
+
+
 
 def extract_face(frame, box):
     """
